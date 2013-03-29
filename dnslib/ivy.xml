@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.    
+-->
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info
+        organisation=""
+        module="dnslib"
+        status="integration">
+	</info>
+	
+	<configurations>
+        <conf name="lib" description="Jars used in lib dir"/>
+        <conf name="compiletime" description="Jars used to compile"/>
+    </configurations>
+	
+	<dependencies>
+	  <dependency org="javax" name="javaee-api" rev="6.0" conf="compiletime->default"/>   
+	  
+       <dependency org="junit" name="junit" rev="4.11" conf="compiletime->default"/>
+       <dependency org="commons-lang" name="commons-lang" rev="2.6" conf="lib->default"/>
+       <dependency org="commons-codec" name="commons-codec" rev="1.7" conf="lib->default"/>
+       <dependency org="commons-lang" name="commons-lang" rev="2.6" conf="lib->default"/>
+       <dependency org="log4j" name="log4j" rev="1.2.17" conf="lib->default"/>
+       <dependency org="com.nativelibs4java" name="bridj" rev="0.6.2" conf="lib->default"/>
+       <dependency org="com.google.guava" name="guava" rev="14.0" conf="lib->default"/>
+       <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.2.3" conf="lib->default"/>
+       <dependency org="org.json" name="json" rev="20090211" conf="lib->default"/>
+       <dependency org="com.google.code.gson" name="gson" rev="2.2.2" conf="lib->default"/>
+	</dependencies>
+</ivy-module>
