@@ -24,6 +24,9 @@ public class TrustAnchorService {
 			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI); 
 			
 			InputStream xsdStream = TrustAnchor.class.getClassLoader().getResourceAsStream("trust-anchor.xsd");
+			if(xsdStream == null){
+				xsdStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("trust-anchor.xsd");
+			}
 			StreamSource xsdSource = new StreamSource(xsdStream);
 					
 			Schema schema = sf.newSchema(xsdSource); 
