@@ -146,4 +146,8 @@ public class Resolver {
 		return lr;
 		
 	}
+	
+	public void cleanup(){
+		UnboundLibrary.ub_ctx_delete(ctx);
+	}
 }

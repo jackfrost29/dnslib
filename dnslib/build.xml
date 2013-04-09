@@ -33,7 +33,7 @@
 	<target name="dist" depends="compile">
 		<!-- <copydir dest="build/classes/lib" src="lib"></copydir> -->
 		<copy file="src/main/java/trust-anchor.xsd" todir="build/classes"/>
-		<copy file="src/main/java/log4j.properties" todir="build/classes"/>
+		<!--<copy file="src/main/java/log4j.properties" todir="build/classes"/> -->
 		<jar destfile="dist/sidn-dnslib.jar" basedir="build/classes" >
 		<!--
 			    <manifest>
