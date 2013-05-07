@@ -2,19 +2,23 @@
 
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="dns-lg" default="dist" basedir=".">
 
+	<target name="retrieve" description="--> retrieve dependencies with ivy">
+		<ivy:retrieve conf="lib" pattern="lib/[artifact].[ext]" />
+	</target>
+
 	<target name="init" depends="bootstrap">
 		<mkdir dir="build/classes" />
 		<mkdir dir="dist" />
-		<mkdir dir="lib" />
+		<!--<mkdir dir="lib" /> -->
 	</target>
-	
+
 	<path id="lib.path.id">
-			<fileset dir="lib/">
-				<include name="*.jar" />
-			</fileset>
+		<fileset dir="lib/">
+			<include name="*.jar" />
+		</fileset>
 	</path>
 
-	<target name="compile" depends="init">
+	<target name="compile" depends="init, retrieve">
 		<javac destdir="build/classes" classpathref="lib.path.id">
 			<src path="src/main/java" />
 		</javac>
@@ -31,25 +35,26 @@
 	</pathconvert>
 -->
 	<target name="dist" depends="compile">
-		<copy file="src/main/java/trust-anchor.xsd" todir="build/classes"/>
-		<jar destfile="dist/sidn-dnslib.jar" basedir="build/classes" >
-	    </jar>		
-   	</target>
-	
+		<copy file="src/main/java/trust-anchor.xsd" todir="build/classes" />
+		<jar destfile="dist/sidn-dnslib.jar" basedir="build/classes">
+		</jar>
+	</target>
+
 	<target name="distWithLibs" depends="compile">
-			<copydir dest="build/classes/lib" src="lib"></copydir>
-			<copy file="src/main/java/trust-anchor.xsd" todir="build/classes"/>
-			<jar destfile="dist/sidn-dnslib.jar" basedir="build/classes" >
- 		    <manifest>
-		        <attribute name="Class-Path" value="${mf.classpath}"/>
-		    </manifest>
-		    </jar>		
-	   	</target>
+		<copydir dest="build/classes/lib" src="lib">
+		</copydir>
+		<copy file="src/main/java/trust-anchor.xsd" todir="build/classes" />
+		<jar destfile="dist/sidn-dnslib.jar" basedir="build/classes">
+			<manifest>
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>
+	</target>
 
 	<target name="clean">
 		<delete dir="build" />
 		<delete dir="dist" />
-		<delete dir="lib" />
+		<!--<delete dir="lib" />-->
 	</target>
 
 
