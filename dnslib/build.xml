@@ -59,6 +59,8 @@
 
 
 	<target name="bootstrap">
-		<get retries="0" maxtime="3" ignoreerrors="true" dest="${user.home}/.ant/lib/ivy.jar" src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar" />
+		<copy todir="${user.home}/.ant/lib/">
+			<fileset dir="/private/sidn/ivy/" includes="*.jar" />
+		</copy>
 	</target>
 </project>
