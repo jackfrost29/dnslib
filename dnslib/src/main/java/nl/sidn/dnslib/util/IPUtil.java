@@ -37,27 +37,49 @@ public class IPUtil {
 		return StringUtils.join(ipv4Parts, ".") + ".in-addr.arpa.";
 	}
 	
-	public static String normalizeIpv6(String ipv6){
-		String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens("2001:db8::567:89ab", ":");
-		List<String> normalizedParts = new ArrayList<>();
-		
-		for (int i = 0; i < parts.length; i++) {
-			String part = parts[i];
-			if(part.length() == 0){
-				//expand missing parts
-				int missing = 8 - parts.length;
-				for (int j = 0; j < missing; j++) {
-					normalizedParts.add("0000");
+	public static String expandIPv6(String ip){
+		String[] sections = StringUtils.splitByWholeSeparatorPreserveAllTokens(ip, ":");
+		StringBuilder sb = new StringBuilder();
+		for (String section : sections) {
+			if(section.length() == 0){
+				int missing = (8 - sections.length)+1;
+				for (int i = 0; i < missing; i++) {
+					sb.append("0000:");
 				}
-			}
-			if(part.length() < 4){
-				normalizedParts.add(StringUtils.leftPad(part, 4, "0"));
+			}else if(section.length() < 4){
+				String paddedSection = StringUtils.leftPad(section, 4, "0");
+				sb.append(paddedSection + ":");
 			}else{
-				normalizedParts.add(part);
+				sb.append(section + ":");
 			}
 		}
-		
-		
-		return StringUtils.join(normalizedParts, ":");
+		String expanded = sb.toString();
+		return StringUtils.removeEnd(expanded, ":");
 	}
+	
+
+	
+//	public static String normalizeIpv6(String ipv6){
+//		String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens("2001:db8::567:89ab", ":");
+//		List<String> normalizedParts = new ArrayList<>();
+//		
+//		for (int i = 0; i < parts.length; i++) {
+//			String part = parts[i];
+//			if(part.length() == 0){
+//				//expand missing parts
+//				int missing = 8 - parts.length;
+//				for (int j = 0; j < missing; j++) {
+//					normalizedParts.add("0000");
+//				}
+//			}
+//			if(part.length() < 4){
+//				normalizedParts.add(StringUtils.leftPad(part, 4, "0"));
+//			}else{
+//				normalizedParts.add(part);
+//			}
+//		}
+//		
+//		
+//		return StringUtils.join(normalizedParts, ":");
+//	}
 }
