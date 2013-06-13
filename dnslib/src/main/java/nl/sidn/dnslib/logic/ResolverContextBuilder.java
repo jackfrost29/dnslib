@@ -80,6 +80,11 @@ public class ResolverContextBuilder {
 		return this;
 	}
 	
+	public ResolverContextBuilder withOutboundPorts(String ports){
+		addOption("outgoing-range:", ports);
+		return this;
+	}
+	
 	public ResolverContextBuilder withForwardingServer(String fwd){
 		int status = UnboundLibrary.ub_ctx_set_fwd(ctx.getCtx(), Pointer.pointerToCString(fwd));
 		if (status != 0) {

@@ -1,13 +1,10 @@
 package nl.sidn.dnslib.logic.unbound;
 
-
 import org.bridj.BridJ;
 import org.bridj.CRuntime;
 import org.bridj.Callback;
 import org.bridj.Pointer;
 import org.bridj.ann.Library;
-import org.bridj.ann.Name;
-import org.bridj.ann.Ptr;
 import org.bridj.ann.Runtime;
 /**
  * Wrapper for library <b>unbound</b><br>
@@ -34,19 +31,6 @@ public class UnboundLibrary {
 	 * 	This structure is allocated on the heap and needs to be<br>
 	 * 	freed with ub_resolve_free(result);
 	 */
-	/**
-	 * Callback for results of async queries.<br>
-	 * The readable function definition looks like:<br>
-	 * void my_callback(void* my_arg, int err, struct ub_result* result);<br>
-	 * It is called with<br>
-	 * void* my_arg: your pointer to a (struct of) data of your choice, <br>
-	 * 	or NULL.<br>
-	 * int err: if 0 all is OK, otherwise an error occured and no results<br>
-	 *      are forthcoming.<br>
-	 * struct result: pointer to more detailed result structure.<br>
-	 * 	This structure is allocated on the heap and needs to be<br>
-	 * 	freed with ub_resolve_free(result);
-	 */
 	public static abstract class ub_callback_t extends Callback<ub_callback_t > {
 		abstract public void apply(Pointer<? > voidPtr1, int int1, Pointer<ub_result > ub_resultPtr1);
 	};
@@ -57,25 +41,17 @@ public class UnboundLibrary {
 	 * @return a new context. default initialisation.<br>
 	 * 	returns NULL on error.<br>
 	 * Original signature : <code>ub_ctx* ub_ctx_create()</code><br>
-	 * <i>native declaration : line 221</i>
+	 * <i>native declaration : line 227</i>
 	 */
-	public static Pointer<UnboundLibrary.ub_ctx > ub_ctx_create() {
-		return Pointer.pointerToAddress(ub_ctx_create$2(), UnboundLibrary.ub_ctx.class);
-	}
-	@Ptr 
-	@Name("ub_ctx_create") 
-	protected native static long ub_ctx_create$2();
+	native public static Pointer<UnboundLibrary.ub_ctx > ub_ctx_create();
 	/**
 	 * Destroy a validation context and free all its resources.<br>
 	 * Outstanding async queries are killed and callbacks are not called for them.<br>
 	 * @param ctx: context to delete.<br>
 	 * Original signature : <code>void ub_ctx_delete(ub_ctx*)</code><br>
-	 * <i>native declaration : line 228</i>
+	 * <i>native declaration : line 234</i>
 	 */
-	public static void ub_ctx_delete(Pointer<UnboundLibrary.ub_ctx > ctx) {
-		ub_ctx_delete(Pointer.getPeer(ctx));
-	}
-	protected native static void ub_ctx_delete(@Ptr long ctx);
+	native public static void ub_ctx_delete(Pointer<UnboundLibrary.ub_ctx > ctx);
 	/**
 	 * Set an option for the context.<br>
 	 * @param ctx: context.<br>
@@ -89,12 +65,9 @@ public class UnboundLibrary {
 	 * @param val: value of the option.<br>
 	 * @return: 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_set_option(ub_ctx*, char*, char*)</code><br>
-	 * <i>native declaration : line 243</i>
+	 * <i>native declaration : line 249</i>
 	 */
-	public static int ub_ctx_set_option(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > opt, Pointer<Byte > val) {
-		return ub_ctx_set_option(Pointer.getPeer(ctx), Pointer.getPeer(opt), Pointer.getPeer(val));
-	}
-	protected native static int ub_ctx_set_option(@Ptr long ctx, @Ptr long opt, @Ptr long val);
+	native public static int ub_ctx_set_option(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > opt, Pointer<Byte > val);
 	/**
 	 * Get an option from the context.<br>
 	 * @param ctx: context.<br>
@@ -109,12 +82,9 @@ public class UnboundLibrary {
 	 * 	returned in the string.<br>
 	 * @return 0 if OK else an error code (malloc failure, syntax error).<br>
 	 * Original signature : <code>int ub_ctx_get_option(ub_ctx*, char*, char**)</code><br>
-	 * <i>native declaration : line 259</i>
+	 * <i>native declaration : line 265</i>
 	 */
-	public static int ub_ctx_get_option(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > opt, Pointer<Pointer<Byte > > str) {
-		return ub_ctx_get_option(Pointer.getPeer(ctx), Pointer.getPeer(opt), Pointer.getPeer(str));
-	}
-	protected native static int ub_ctx_get_option(@Ptr long ctx, @Ptr long opt, @Ptr long str);
+	native public static int ub_ctx_get_option(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > opt, Pointer<Pointer<Byte > > str);
 	/**
 	 * setup configuration for the given context.<br>
 	 * @param ctx: context.<br>
@@ -125,12 +95,9 @@ public class UnboundLibrary {
 	 * 	routines exist.<br>
 	 * @return: 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_config(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 271</i>
+	 * <i>native declaration : line 277</i>
 	 */
-	public static int ub_ctx_config(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname) {
-		return ub_ctx_config(Pointer.getPeer(ctx), Pointer.getPeer(fname));
-	}
-	protected native static int ub_ctx_config(@Ptr long ctx, @Ptr long fname);
+	native public static int ub_ctx_config(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname);
 	/**
 	 * Set machine to forward DNS queries to, the caching resolver to use. <br>
 	 * IP4 or IP6 address. Forwards all DNS requests to that machine, which <br>
@@ -146,12 +113,9 @@ public class UnboundLibrary {
 	 * 	If the addr is NULL, forwarding is disabled.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_set_fwd(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 290</i>
+	 * <i>native declaration : line 296</i>
 	 */
-	public static int ub_ctx_set_fwd(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > addr) {
-		return ub_ctx_set_fwd(Pointer.getPeer(ctx), Pointer.getPeer(addr));
-	}
-	protected native static int ub_ctx_set_fwd(@Ptr long ctx, @Ptr long addr);
+	native public static int ub_ctx_set_fwd(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > addr);
 	/**
 	 * Read list of nameservers to use from the filename given.<br>
 	 * Usually "/etc/resolv.conf". Uses those nameservers as caching proxies.<br>
@@ -164,12 +128,9 @@ public class UnboundLibrary {
 	 * @param fname: file name string. If NULL "/etc/resolv.conf" is used.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_resolvconf(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 306</i>
+	 * <i>native declaration : line 312</i>
 	 */
-	public static int ub_ctx_resolvconf(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname) {
-		return ub_ctx_resolvconf(Pointer.getPeer(ctx), Pointer.getPeer(fname));
-	}
-	protected native static int ub_ctx_resolvconf(@Ptr long ctx, @Ptr long fname);
+	native public static int ub_ctx_resolvconf(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname);
 	/**
 	 * Read list of hosts from the filename given.<br>
 	 * Usually "/etc/hosts". <br>
@@ -180,12 +141,9 @@ public class UnboundLibrary {
 	 * @param fname: file name string. If NULL "/etc/hosts" is used.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_hosts(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 319</i>
+	 * <i>native declaration : line 325</i>
 	 */
-	public static int ub_ctx_hosts(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname) {
-		return ub_ctx_hosts(Pointer.getPeer(ctx), Pointer.getPeer(fname));
-	}
-	protected native static int ub_ctx_hosts(@Ptr long ctx, @Ptr long fname);
+	native public static int ub_ctx_hosts(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname);
 	/**
 	 * Add a trust anchor to the given context.<br>
 	 * The trust anchor is a string, on one line, that holds a valid DNSKEY or<br>
@@ -197,12 +155,9 @@ public class UnboundLibrary {
 	 * 	[domainname] [TTL optional] [type] [class optional] [rdata contents]<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_add_ta(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 332</i>
+	 * <i>native declaration : line 338</i>
 	 */
-	public static int ub_ctx_add_ta(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > ta) {
-		return ub_ctx_add_ta(Pointer.getPeer(ctx), Pointer.getPeer(ta));
-	}
-	protected native static int ub_ctx_add_ta(@Ptr long ctx, @Ptr long ta);
+	native public static int ub_ctx_add_ta(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > ta);
 	/**
 	 * Add trust anchors to the given context.<br>
 	 * Pass name of a file with DS and DNSKEY records (like from dig or drill).<br>
@@ -212,12 +167,9 @@ public class UnboundLibrary {
 	 * @param fname: filename of file with keyfile with trust anchors.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_add_ta_file(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 343</i>
+	 * <i>native declaration : line 349</i>
 	 */
-	public static int ub_ctx_add_ta_file(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname) {
-		return ub_ctx_add_ta_file(Pointer.getPeer(ctx), Pointer.getPeer(fname));
-	}
-	protected native static int ub_ctx_add_ta_file(@Ptr long ctx, @Ptr long fname);
+	native public static int ub_ctx_add_ta_file(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname);
 	/**
 	 * Add trust anchors to the given context.<br>
 	 * Pass the name of a bind-style config file with trusted-keys{}.<br>
@@ -228,12 +180,9 @@ public class UnboundLibrary {
 	 * 	anchors.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_trustedkeys(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 355</i>
+	 * <i>native declaration : line 361</i>
 	 */
-	public static int ub_ctx_trustedkeys(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname) {
-		return ub_ctx_trustedkeys(Pointer.getPeer(ctx), Pointer.getPeer(fname));
-	}
-	protected native static int ub_ctx_trustedkeys(@Ptr long ctx, @Ptr long fname);
+	native public static int ub_ctx_trustedkeys(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > fname);
 	/**
 	 * Set debug output (and error output) to the specified stream.<br>
 	 * Pass NULL to disable. Default is stderr.<br>
@@ -242,12 +191,9 @@ public class UnboundLibrary {
 	 * 	Type void* to avoid stdio dependency of this header file.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_debugout(ub_ctx*, void*)</code><br>
-	 * <i>native declaration : line 365</i>
+	 * <i>native declaration : line 371</i>
 	 */
-	public static int ub_ctx_debugout(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<? > out) {
-		return ub_ctx_debugout(Pointer.getPeer(ctx), Pointer.getPeer(out));
-	}
-	protected native static int ub_ctx_debugout(@Ptr long ctx, @Ptr long out);
+	native public static int ub_ctx_debugout(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<? > out);
 	/**
 	 * Set debug verbosity for the context<br>
 	 * Output is directed to stderr.<br>
@@ -256,12 +202,9 @@ public class UnboundLibrary {
 	 * and 3 is lots.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_debuglevel(ub_ctx*, int)</code><br>
-	 * <i>native declaration : line 375</i>
+	 * <i>native declaration : line 381</i>
 	 */
-	public static int ub_ctx_debuglevel(Pointer<UnboundLibrary.ub_ctx > ctx, int d) {
-		return ub_ctx_debuglevel(Pointer.getPeer(ctx), d);
-	}
-	protected native static int ub_ctx_debuglevel(@Ptr long ctx, int d);
+	native public static int ub_ctx_debuglevel(Pointer<UnboundLibrary.ub_ctx > ctx, int d);
 	/**
 	 * Set a context behaviour for asynchronous action.<br>
 	 * @param ctx: context.<br>
@@ -272,12 +215,9 @@ public class UnboundLibrary {
 	 * no effect (delete and re-create the context to change).<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_async(ub_ctx*, int)</code><br>
-	 * <i>native declaration : line 387</i>
+	 * <i>native declaration : line 393</i>
 	 */
-	public static int ub_ctx_async(Pointer<UnboundLibrary.ub_ctx > ctx, int dothread) {
-		return ub_ctx_async(Pointer.getPeer(ctx), dothread);
-	}
-	protected native static int ub_ctx_async(@Ptr long ctx, int dothread);
+	native public static int ub_ctx_async(Pointer<UnboundLibrary.ub_ctx > ctx, int dothread);
 	/**
 	 * Poll a context to see if it has any new results<br>
 	 * Do not poll in a loop, instead extract the fd below to poll for readiness,<br>
@@ -286,12 +226,9 @@ public class UnboundLibrary {
 	 * @return: 0 if nothing to read, or nonzero if a result is available.<br>
 	 * 	If nonzero, call ctx_process() to do callbacks.<br>
 	 * Original signature : <code>int ub_poll(ub_ctx*)</code><br>
-	 * <i>native declaration : line 397</i>
+	 * <i>native declaration : line 403</i>
 	 */
-	public static int ub_poll(Pointer<UnboundLibrary.ub_ctx > ctx) {
-		return ub_poll(Pointer.getPeer(ctx));
-	}
-	protected native static int ub_poll(@Ptr long ctx);
+	native public static int ub_poll(Pointer<UnboundLibrary.ub_ctx > ctx);
 	/**
 	 * Wait for a context to finish with results. Calls ub_process() after<br>
 	 * the wait for you. After the wait, there are no more outstanding <br>
@@ -299,12 +236,9 @@ public class UnboundLibrary {
 	 * @param ctx: context.<br>
 	 * @return: 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_wait(ub_ctx*)</code><br>
-	 * <i>native declaration : line 406</i>
+	 * <i>native declaration : line 412</i>
 	 */
-	public static int ub_wait(Pointer<UnboundLibrary.ub_ctx > ctx) {
-		return ub_wait(Pointer.getPeer(ctx));
-	}
-	protected native static int ub_wait(@Ptr long ctx);
+	native public static int ub_wait(Pointer<UnboundLibrary.ub_ctx > ctx);
 	/**
 	 * Get file descriptor. Wait for it to become readable, at this point<br>
 	 * answers are returned from the asynchronous validating resolver.<br>
@@ -314,12 +248,9 @@ public class UnboundLibrary {
 	 * @param ctx: context.<br>
 	 * @return: -1 on error, or file descriptor to use select(2) with.<br>
 	 * Original signature : <code>int ub_fd(ub_ctx*)</code><br>
-	 * <i>native declaration : line 417</i>
+	 * <i>native declaration : line 423</i>
 	 */
-	public static int ub_fd(Pointer<UnboundLibrary.ub_ctx > ctx) {
-		return ub_fd(Pointer.getPeer(ctx));
-	}
-	protected native static int ub_fd(@Ptr long ctx);
+	native public static int ub_fd(Pointer<UnboundLibrary.ub_ctx > ctx);
 	/**
 	 * Call this routine to continue processing results from the validating<br>
 	 * resolver (when the fd becomes readable).<br>
@@ -327,12 +258,9 @@ public class UnboundLibrary {
 	 * @param ctx: context<br>
 	 * @return: 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_process(ub_ctx*)</code><br>
-	 * <i>native declaration : line 426</i>
+	 * <i>native declaration : line 432</i>
 	 */
-	public static int ub_process(Pointer<UnboundLibrary.ub_ctx > ctx) {
-		return ub_process(Pointer.getPeer(ctx));
-	}
-	protected native static int ub_process(@Ptr long ctx);
+	native public static int ub_process(Pointer<UnboundLibrary.ub_ctx > ctx);
 	/**
 	 * Perform resolution and validation of the target name.<br>
 	 * @param ctx: context.<br>
@@ -345,13 +273,9 @@ public class UnboundLibrary {
 	 * 	in that case (out of memory).<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_resolve(ub_ctx*, char*, int, int, ub_result**)</code><br>
-	 * <i>native declaration : line 440</i>
+	 * <i>native declaration : line 446</i>
 	 */
-	public static int ub_resolve(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > name, int rrtype, int rrclass, Pointer<Pointer<ub_result > > result) {
-		return ub_resolve(Pointer.getPeer(ctx), Pointer.getPeer(name), rrtype, rrclass, Pointer.getPeer(result));
-	}
-	
-	protected native static int ub_resolve(@Ptr long ctx, @Ptr long name, int rrtype, int rrclass, @Ptr long result);
+	native public static int ub_resolve(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > name, int rrtype, int rrclass, Pointer<Pointer<ub_result > > result);
 	/**
 	 * Perform resolution and validation of the target name.<br>
 	 * Asynchronous, after a while, the callback will be called with your<br>
@@ -379,12 +303,9 @@ public class UnboundLibrary {
 	 * cancel the query.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_resolve_async(ub_ctx*, char*, int, int, void*, ub_callback_t, int*)</code><br>
-	 * <i>native declaration : line 471</i>
+	 * <i>native declaration : line 477</i>
 	 */
-	public static int ub_resolve_async(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > name, int rrtype, int rrclass, Pointer<? > mydata, Pointer<UnboundLibrary.ub_callback_t > callback, Pointer<Integer > async_id) {
-		return ub_resolve_async(Pointer.getPeer(ctx), Pointer.getPeer(name), rrtype, rrclass, Pointer.getPeer(mydata), Pointer.getPeer(callback), Pointer.getPeer(async_id));
-	}
-	protected native static int ub_resolve_async(@Ptr long ctx, @Ptr long name, int rrtype, int rrclass, @Ptr long mydata, @Ptr long callback, @Ptr long async_id);
+	native public static int ub_resolve_async(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > name, int rrtype, int rrclass, Pointer<? > mydata, Pointer<UnboundLibrary.ub_callback_t > callback, Pointer<Integer > async_id);
 	/**
 	 * Cancel an async query in progress.<br>
 	 * Its callback will not be called.<br>
@@ -397,46 +318,32 @@ public class UnboundLibrary {
 	 * cancel fails with an error.  Also the cancel can fail due to a system<br>
 	 * error, no memory or socket failures.<br>
 	 * Original signature : <code>int ub_cancel(ub_ctx*, int)</code><br>
-	 * <i>native declaration : line 487</i>
+	 * <i>native declaration : line 493</i>
 	 */
-	public static int ub_cancel(Pointer<UnboundLibrary.ub_ctx > ctx, int async_id) {
-		return ub_cancel(Pointer.getPeer(ctx), async_id);
-	}
-	protected native static int ub_cancel(@Ptr long ctx, int async_id);
+	native public static int ub_cancel(Pointer<UnboundLibrary.ub_ctx > ctx, int async_id);
 	/**
 	 * Free storage associated with a result structure.<br>
 	 * @param result: to free<br>
 	 * Original signature : <code>void ub_resolve_free(ub_result*)</code><br>
-	 * <i>native declaration : line 493</i>
+	 * <i>native declaration : line 499</i>
 	 */
-	public static void ub_resolve_free(Pointer<ub_result > result) {
-		ub_resolve_free(Pointer.getPeer(result));
-	}
-	protected native static void ub_resolve_free(@Ptr long result);
+	native public static void ub_resolve_free(Pointer<ub_result > result);
 	/**
 	 * Convert error value to a human readable string.<br>
 	 * @param err: error code from one of the ub_val* functions.<br>
 	 * @return pointer to constant text string, zero terminated.<br>
 	 * Original signature : <code>char* ub_strerror(int)</code><br>
-	 * <i>native declaration : line 500</i>
+	 * <i>native declaration : line 506</i>
 	 */
-	public static Pointer<Byte > ub_strerror(int err) {
-		return Pointer.pointerToAddress(ub_strerror$2(err), Byte.class);
-	}
-	@Ptr 
-	@Name("ub_strerror") 
-	protected native static long ub_strerror$2(int err);
+	native public static Pointer<Byte > ub_strerror(int err);
 	/**
 	 * Debug routine.  Print the local zone information to debug output.<br>
 	 * @param ctx: context.  Is finalized by the routine.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_print_local_zones(ub_ctx*)</code><br>
-	 * <i>native declaration : line 507</i>
+	 * <i>native declaration : line 513</i>
 	 */
-	public static int ub_ctx_print_local_zones(Pointer<UnboundLibrary.ub_ctx > ctx) {
-		return ub_ctx_print_local_zones(Pointer.getPeer(ctx));
-	}
-	protected native static int ub_ctx_print_local_zones(@Ptr long ctx);
+	native public static int ub_ctx_print_local_zones(Pointer<UnboundLibrary.ub_ctx > ctx);
 	/**
 	 * Add a new zone with the zonetype to the local authority info of the <br>
 	 * library.<br>
@@ -446,12 +353,9 @@ public class UnboundLibrary {
 	 * @param zone_type: type of the zone (like for unbound.conf) in text.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_zone_add(ub_ctx*, char*, char*)</code><br>
-	 * <i>native declaration : line 518</i>
+	 * <i>native declaration : line 524</i>
 	 */
-	public static int ub_ctx_zone_add(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > zone_name, Pointer<Byte > zone_type) {
-		return ub_ctx_zone_add(Pointer.getPeer(ctx), Pointer.getPeer(zone_name), Pointer.getPeer(zone_type));
-	}
-	protected native static int ub_ctx_zone_add(@Ptr long ctx, @Ptr long zone_name, @Ptr long zone_type);
+	native public static int ub_ctx_zone_add(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > zone_name, Pointer<Byte > zone_type);
 	/**
 	 * Remove zone from local authority info of the library.<br>
 	 * @param ctx: context.  Is finalized by the routine.<br>
@@ -459,12 +363,9 @@ public class UnboundLibrary {
 	 * If it does not exist, nothing happens.<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_zone_remove(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 527</i>
+	 * <i>native declaration : line 533</i>
 	 */
-	public static int ub_ctx_zone_remove(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > zone_name) {
-		return ub_ctx_zone_remove(Pointer.getPeer(ctx), Pointer.getPeer(zone_name));
-	}
-	protected native static int ub_ctx_zone_remove(@Ptr long ctx, @Ptr long zone_name);
+	native public static int ub_ctx_zone_remove(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > zone_name);
 	/**
 	 * Add localdata to the library local authority info.<br>
 	 * Similar to local-data config statement.<br>
@@ -473,38 +374,26 @@ public class UnboundLibrary {
 	 * "www.example.com IN A 127.0.0.1"<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_data_add(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 537</i>
+	 * <i>native declaration : line 543</i>
 	 */
-	public static int ub_ctx_data_add(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > data) {
-		return ub_ctx_data_add(Pointer.getPeer(ctx), Pointer.getPeer(data));
-	}
-	protected native static int ub_ctx_data_add(@Ptr long ctx, @Ptr long data);
+	native public static int ub_ctx_data_add(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > data);
 	/**
 	 * Remove localdata from the library local authority info.<br>
 	 * @param ctx: context.  Is finalized by the routine.<br>
 	 * @param data: the name to delete all data from, like "www.example.com".<br>
 	 * @return 0 if OK, else error.<br>
 	 * Original signature : <code>int ub_ctx_data_remove(ub_ctx*, char*)</code><br>
-	 * <i>native declaration : line 545</i>
+	 * <i>native declaration : line 551</i>
 	 */
-	public static int ub_ctx_data_remove(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > data) {
-		return ub_ctx_data_remove(Pointer.getPeer(ctx), Pointer.getPeer(data));
-	}
-	protected native static int ub_ctx_data_remove(@Ptr long ctx, @Ptr long data);
+	native public static int ub_ctx_data_remove(Pointer<UnboundLibrary.ub_ctx > ctx, Pointer<Byte > data);
 	/**
 	 * Get a version string from the libunbound implementation.<br>
 	 * @return a static constant string with the version number.<br>
 	 * Original signature : <code>char* ub_version()</code><br>
-	 * <i>native declaration : line 551</i>
+	 * <i>native declaration : line 557</i>
 	 */
-	public static Pointer<Byte > ub_version() {
-		return Pointer.pointerToAddress(ub_version$2(), Byte.class);
-	}
-	@Ptr 
-	@Name("ub_version") 
-	protected native static long ub_version$2();
-	/// Undefined type
-	/// Undefined type
+	native public static Pointer<Byte > ub_version();
+	/** Undefined type */
 	public static interface ub_ctx {
 		
 	};

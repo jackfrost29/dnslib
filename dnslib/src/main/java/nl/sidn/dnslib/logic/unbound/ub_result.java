@@ -1,5 +1,6 @@
 package nl.sidn.dnslib.logic.unbound;
 
+
 import org.bridj.Pointer;
 import org.bridj.StructObject;
 import org.bridj.ann.Field;
@@ -13,28 +14,8 @@ import org.bridj.ann.Library;
  * a tool written by <a href="http://ochafik.com/">Olivier Chafik</a> that <a href="http://code.google.com/p/jnaerator/wiki/CreditsAndLicense">uses a few opensource projects.</a>.<br>
  * For help, please visit <a href="http://nativelibs4java.googlecode.com/">NativeLibs4Java</a> or <a href="http://bridj.googlecode.com/">BridJ</a> .
  */
-
-//struct ub_result {
-//    char* qname; /* text string, original question */
-//    int qtype;   /* type code asked for */
-//    int qclass;  /* class code asked for */
-//    char** data; /* array of rdata items, NULL terminated*/
-//    int* len;    /* array with lengths of rdata items */
-//    char* canonname; /* canonical name of result */
-//    int rcode;   /* additional error code in case of no data */
-//    void* answer_packet; /* full network format answer packet */
-//    int answer_len; /* length of packet in octets */
-//    int havedata; /* true if there is data */
-//    int nxdomain; /* true if nodata because name does not exist */
-//    int secure;  /* true if result is secure */
-//    int bogus;   /* true if a security failure happened */
-//    char* why_bogus; /* string with error if bogus */
-//};
 @Library("unbound") 
 public class ub_result extends StructObject {
-	public ub_result() {
-		super();
-	}
 	/**
 	 * The original question, name text string.<br>
 	 * C type : char*
@@ -52,23 +33,23 @@ public class ub_result extends StructObject {
 		this.io.setPointerField(this, 0, qname);
 		return this;
 	}
-	/// the type asked for
+	/** the type asked for */
 	@Field(1) 
 	public int qtype() {
 		return this.io.getIntField(this, 1);
 	}
-	/// the type asked for
+	/** the type asked for */
 	@Field(1) 
 	public ub_result qtype(int qtype) {
 		this.io.setIntField(this, 1, qtype);
 		return this;
 	}
-	/// the class asked for
+	/** the class asked for */
 	@Field(2) 
 	public int qclass() {
 		return this.io.getIntField(this, 2);
 	}
-	/// the class asked for
+	/** the class asked for */
 	@Field(2) 
 	public ub_result qclass(int qclass) {
 		this.io.setIntField(this, 2, qclass);
@@ -169,12 +150,12 @@ public class ub_result extends StructObject {
 		this.io.setPointerField(this, 7, answer_packet);
 		return this;
 	}
-	/// length of the answer packet in octets.
+	/** length of the answer packet in octets. */
 	@Field(8) 
 	public int answer_len() {
 		return this.io.getIntField(this, 8);
 	}
-	/// length of the answer packet in octets.
+	/** length of the answer packet in octets. */
 	@Field(8) 
 	public ub_result answer_len(int answer_len) {
 		this.io.setIntField(this, 8, answer_len);
@@ -291,7 +272,28 @@ public class ub_result extends StructObject {
 		this.io.setPointerField(this, 13, why_bogus);
 		return this;
 	}
+	/**
+	 * TTL for the result, in seconds.  If the security is bogus, then<br>
+	 * you also cannot trust this value.
+	 */
+	@Field(14) 
+	public int ttl() {
+		return this.io.getIntField(this, 14);
+	}
+	/**
+	 * TTL for the result, in seconds.  If the security is bogus, then<br>
+	 * you also cannot trust this value.
+	 */
+	@Field(14) 
+	public ub_result ttl(int ttl) {
+		this.io.setIntField(this, 14, ttl);
+		return this;
+	}
+	public ub_result() {
+		super();
+	}
 	public ub_result(Pointer pointer) {
 		super(pointer);
 	}
 }
+

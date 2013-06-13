@@ -86,6 +86,9 @@ public class Resolver {
 	}
 	
 	public void cleanup(){
-		UnboundLibrary.ub_ctx_delete(ctx);
+		if(ctx != null){
+			UnboundLibrary.ub_ctx_delete(ctx);
+			ctx = null;
+		}
 	}
 }
