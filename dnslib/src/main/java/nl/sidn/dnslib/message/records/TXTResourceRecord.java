@@ -7,13 +7,14 @@ public class TXTResourceRecord extends AbstractResourceRecord {
 	private static final long serialVersionUID = 1L;
 	
 	protected String value;
+	protected byte[] data;
 
 
 	@Override
 	public void decode(NetworkData buffer) {
 		super.decode(buffer);
 	
-		byte[] data = new byte[rdLength];
+		data = new byte[rdLength];
 		buffer.readBytes(data);
 		
 		value = new String(data);
