@@ -79,6 +79,7 @@ public class Resolver {
 			Pointer<Byte> errorString = UnboundLibrary.ub_strerror(status);
 			errorString.getCString();
 			lr.setStatus(errorString.getCString());
+			lr.setHaveData(false);
 		}
 		
 		return lr;
