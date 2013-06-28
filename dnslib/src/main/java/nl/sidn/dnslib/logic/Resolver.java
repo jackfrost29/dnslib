@@ -37,9 +37,10 @@ public class Resolver {
 		//UnboundLibrary.ub_ctx_delete(ctx);
 		 
 		LookupResult lr = new LookupResult();
+		ub_result ubr = result.get().get();
+		lr.setRcode(RcodeType.fromValue(ubr.rcode()));		
 		if(status == 0){
 			/* lookup was successful, get the result */
-			ub_result ubr = result.get().get();
 				
 			lr.setHaveData(ubr.havedata() == 0? false: true);
 			lr.setBogus(ubr.bogus() == 0? false: true);
@@ -47,7 +48,6 @@ public class Resolver {
 			lr.setqName(ubr.qname().getCString());
 			lr.setqType(ResourceRecordType.fromValue(ubr.qtype()));
 			lr.setqClazz(ResourceRecordClass.fromValue(ubr.qclass()));		
-			lr.setRcode(RcodeType.fromValue(ubr.rcode()));			
 			lr.setDatapacketLength(ubr.answer_len());
 		    /* only get packetdata if any data is available */
 			if(lr.getDatapacketLength() > 0){
@@ -78,7 +78,9 @@ public class Resolver {
 			/* lookup failed, get the error message from libunbound */
 			Pointer<Byte> errorString = UnboundLibrary.ub_strerror(status);
 			errorString.getCString();
-			lr.setStatus(errorString.getCString());
+			if(errorString != null){
+				lr.setStatus(errorString.getCString());
+			}
 			lr.setHaveData(false);
 		}
 		
