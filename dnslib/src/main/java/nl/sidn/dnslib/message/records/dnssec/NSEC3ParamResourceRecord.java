@@ -1,11 +1,10 @@
 package nl.sidn.dnslib.message.records.dnssec;
 
-import org.apache.commons.codec.binary.Hex;
-
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.DigestType;
-import nl.sidn.dnslib.types.ResourceRecordType;
+
+import org.apache.commons.codec.binary.Hex;
 
 /**
  *  The RDATA of the NSEC3PARAM RR is as shown below:

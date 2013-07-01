@@ -2,7 +2,6 @@ package nl.sidn.dnslib.message.records;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Formatter;
 
 import nl.sidn.dnslib.exception.DnsDecodeException;
 import nl.sidn.dnslib.message.util.NetworkData;

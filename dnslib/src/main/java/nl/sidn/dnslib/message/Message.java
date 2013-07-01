@@ -5,7 +5,6 @@ import java.util.List;
 
 import nl.sidn.dnslib.message.records.ResourceRecord;
 import nl.sidn.dnslib.message.records.ResourceRecordFactory;
-import nl.sidn.dnslib.message.records.edns0.OPTResourceRecord;
 import nl.sidn.dnslib.message.util.DNSStringUtil;
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.ResourceRecordType;
