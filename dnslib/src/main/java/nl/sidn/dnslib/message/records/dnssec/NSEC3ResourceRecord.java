@@ -7,7 +7,6 @@ import java.util.List;
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.DigestType;
-import nl.sidn.dnslib.types.ResourceRecordType;
 import nl.sidn.dnslib.types.TypeMap;
 
 import org.apache.commons.codec.binary.Base32;

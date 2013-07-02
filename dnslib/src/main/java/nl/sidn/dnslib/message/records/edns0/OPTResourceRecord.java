@@ -96,51 +96,6 @@ public class OPTResourceRecord extends AbstractResourceRecord {
 		buffer.writeChar(rdLeng); 
 	}
 
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public void setName(String name) {
-
-	}
-
-	@Override
-	public ResourceRecordType getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setType(ResourceRecordType type) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public ResourceRecordClass getClassz() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setClassz(ResourceRecordClass classz) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public long getTtl() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setTtl(long ttl) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public String toString() {
