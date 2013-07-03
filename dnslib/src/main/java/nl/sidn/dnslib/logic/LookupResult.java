@@ -32,8 +32,10 @@ public class LookupResult {
 	private boolean bogus;
 	 /* string with error if bogus */
 	private String whyBogus;
-	
+	/* status msg from resolver */
 	private String status;
+	/* if true then query was successful, otherwise false */
+	private boolean ok;
 	
 	public String getqName() {
 		return qName;
@@ -118,6 +120,12 @@ public class LookupResult {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public boolean isOk() {
+		return ok;
+	}
+	public void setOk(boolean ok) {
+		this.ok = ok;
 	}
 
 

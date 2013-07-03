@@ -40,6 +40,7 @@ public class Resolver {
 		ub_result ubr = result.get().get();
 		lr.setRcode(RcodeType.fromValue(ubr.rcode()));		
 		if(status == 0){
+			lr.setOk(true);
 			/* lookup was successful, get the result */
 				
 			lr.setHaveData(ubr.havedata() == 0? false: true);
@@ -75,6 +76,7 @@ public class Resolver {
 			}
 			return lr;
 		}else{
+			lr.setOk(false);
 			/* lookup failed, get the error message from libunbound */
 			Pointer<Byte> errorString = UnboundLibrary.ub_strerror(status);
 			errorString.getCString();
