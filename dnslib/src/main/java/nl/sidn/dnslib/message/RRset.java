@@ -42,6 +42,9 @@ public class RRset implements Serializable {
 	}
 	
 	public void add(ResourceRecord rr){
+		if(rr.getName() == null){
+			System.out.println("null");
+		}
 		if(rr.getClassz() == classz &&
 				rr.getType() == type &&
 				rr.getName().equalsIgnoreCase(owner)){

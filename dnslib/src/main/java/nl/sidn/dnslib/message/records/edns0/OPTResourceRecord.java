@@ -111,6 +111,46 @@ public class OPTResourceRecord extends AbstractResourceRecord {
 	public void setDnssecDo(boolean dnssecDo) {
 		this.dnssecDo = dnssecDo;
 	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public char getUdpPlayloadSize() {
+		return udpPlayloadSize;
+	}
+
+	public void setUdpPlayloadSize(char udpPlayloadSize) {
+		this.udpPlayloadSize = udpPlayloadSize;
+	}
+
+	public short getRcode() {
+		return rcode;
+	}
+
+	public void setRcode(short rcode) {
+		this.rcode = rcode;
+	}
+
+	public short getVersion() {
+		return version;
+	}
+
+	public void setVersion(short version) {
+		this.version = version;
+	}
+
+	public char getFlags() {
+		return flags;
+	}
+
+	public void setFlags(char flags) {
+		this.flags = flags;
+	}
 
 	@Override
 	public String toZone(int maxLength) {
