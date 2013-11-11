@@ -1,10 +1,17 @@
 package nl.sidn.dnslib.message.records.dnssec;
 
+import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.DigestType;
 
 import org.apache.commons.codec.binary.Hex;
+import org.codehaus.jackson.JsonGenerator;
 
 /**
  *  The RDATA of the NSEC3PARAM RR is as shown below:
@@ -138,6 +145,39 @@ public class NSEC3ParamResourceRecord extends AbstractResourceRecord{
 		return b.toString();
 	}
 	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("hash-algorithm", hashAlgorithm.name()).
+				add("flags", flags).
+				add("optout", optout).
+				add("iterations", (int)iterations).
+				add("salt-length", saltLength).
+				add("salt", Hex.encodeHexString(salt))).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeObjectField("hash-algorithm",hashAlgorithm.name());
+			g.writeNumberField("flags", flags);
+			g.writeBooleanField("optout", optout);
+			g.writeNumberField("iterations", (int)iterations);
+			g.writeNumberField("salt-length", saltLength);
+			g.writeObjectField("salt", Hex.encodeHexString(salt));
+			
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	
 }

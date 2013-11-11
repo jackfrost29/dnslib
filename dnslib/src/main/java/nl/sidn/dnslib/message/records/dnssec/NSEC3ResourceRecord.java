@@ -1,8 +1,14 @@
 package nl.sidn.dnslib.message.records.dnssec;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.NetworkData;
@@ -11,6 +17,7 @@ import nl.sidn.dnslib.types.TypeMap;
 
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
+import org.codehaus.jackson.JsonGenerator;
 
 public class NSEC3ResourceRecord extends AbstractResourceRecord {
 	
@@ -103,6 +110,54 @@ public class NSEC3ResourceRecord extends AbstractResourceRecord {
 				+ (int)iterations + ", saltLength=" + saltLength + ", salt="
 				+ Arrays.toString(salt) + ", hashLength=" + hashLength
 				+ "]";
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		builder.
+			add("rdata", Json.createObjectBuilder().
+				add("hash-algorithm", hashAlgorithm.name()).
+				add("flags", flags).
+				add("iterations", (int)iterations).
+				add("salt-length", saltLength).
+				add("salt", Hex.encodeHexString(salt)).
+				add("hash-length", (int)hashLength).
+				add("nxt-own-name", nexthashedownername));
+				
+				JsonArrayBuilder typeBuilder = Json.createArrayBuilder();
+				for (TypeMap type : types) {
+					typeBuilder.add(type.getType().name());
+				}
+			return builder.add("types", typeBuilder.build()).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeObjectField("hash-algorithm",  hashAlgorithm.name());
+			g.writeNumberField("flags", flags);
+			g.writeNumberField("iterations", (int)iterations);
+			g.writeNumberField("salt-length", saltLength);
+			g.writeObjectField("salt", Hex.encodeHexString(salt));
+			g.writeNumberField("hash-length", (int)hashLength);
+			g.writeObjectField("nxt-own-name", nexthashedownername);
+			
+			g.writeArrayFieldStart("types");
+			for (TypeMap type : types) {
+				g.writeString(type.getType().name());
+			}
+			g.writeEndArray();
+			
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public DigestType getHashAlgorithm() {

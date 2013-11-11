@@ -1,12 +1,21 @@
 package nl.sidn.dnslib.message.records.edns0;
 
+import java.io.IOException;
+import java.util.Date;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.DNSStringUtil;
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.ResourceRecordClass;
 import nl.sidn.dnslib.types.ResourceRecordType;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerator;
 
 /**
  * 
@@ -102,6 +111,38 @@ public class OPTResourceRecord extends AbstractResourceRecord {
 		return "OPTResourceRecord [name=" + name + ", type=" + type
 				+ ", udpPlayloadSize=" + (int)udpPlayloadSize + ", rdLeng=" + (int)rdLeng
 				+ ", doBit=" + dnssecDo + "]";
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		return builder.
+			add("name", name).
+			add("type", type.name()).
+			add("payload-size", (int)udpPlayloadSize).
+			add("rcode", rcode).
+			add("flags", (int)flags).
+			add("rdata", Json.createObjectBuilder().
+				add("do", dnssecDo)).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+		try {
+			g.writeStartObject();
+			g.writeObjectField("name", name);
+			g.writeObjectField("type", type.name());
+			g.writeNumberField("payload-size", (int)udpPlayloadSize);
+			g.writeNumberField("rcode", rcode);
+			g.writeNumberField("flags", (int)flags);
+			g.writeObjectFieldStart("rdata");
+			g.writeBooleanField("do", dnssecDo);
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean getDnssecDo() {

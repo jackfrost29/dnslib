@@ -41,5 +41,7 @@
        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.2.3" conf="lib->default"/>
        <dependency org="org.json" name="json" rev="20090211" conf="lib->default"/>
        <dependency org="com.google.code.gson" name="gson" rev="2.2.2" conf="lib->default"/>
+       <dependency org="org.glassfish" name="javax.json" rev="1.0.3" conf="lib->default"/>
+       <dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.13" conf="lib->default"/>
 	</dependencies>
 </ivy-module>

@@ -1,8 +1,18 @@
 package nl.sidn.dnslib.message;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonGenerator;
 
 import nl.sidn.dnslib.message.records.ResourceRecord;
 import nl.sidn.dnslib.types.ResourceRecordClass;
@@ -43,7 +53,7 @@ public class RRset implements Serializable {
 	
 	public void add(ResourceRecord rr){
 		if(rr.getName() == null){
-			System.out.println("null");
+			throw new IllegalArgumentException("Trying to add an Invalid rr to the rrset: " + rr);
 		}
 		if(rr.getClassz() == classz &&
 				rr.getType() == type &&
@@ -103,6 +113,36 @@ public class RRset implements Serializable {
 		return b.toString();
 	}
 
+	public JsonArray toJSon(){
+		JsonArrayBuilder builder = Json.createArrayBuilder();
+		
+		for (ResourceRecord rr : data) {
+			builder.add(rr.toJSon());
+		}
+		
+		return builder.build();
+	}
+
+	public void toJSon(JsonGenerator g) {
+		
+
+		try {
+			if(data.size() > 0){
+				g.writeStartArray();
+				for (ResourceRecord rr : data) {
+					rr.toJSon(g);
+				}	
+				g.writeEndArray();
+			}
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 
 }

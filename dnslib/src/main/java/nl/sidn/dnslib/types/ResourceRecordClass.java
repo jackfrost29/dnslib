@@ -29,9 +29,11 @@ import org.apache.commons.lang.StringUtils;
  */
 public enum ResourceRecordClass {
 
+	RESERVED_0(0),
 	IN(1),
 	CH(3),
 	HS(4),
+	NONE(254),
 	ANY(255);
 	
 	private int value;

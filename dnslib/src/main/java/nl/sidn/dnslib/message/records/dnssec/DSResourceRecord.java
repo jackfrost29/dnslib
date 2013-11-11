@@ -1,6 +1,11 @@
 package nl.sidn.dnslib.message.records.dnssec;
 
+import java.io.IOException;
 import java.util.Arrays;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.NetworkData;
@@ -9,6 +14,7 @@ import nl.sidn.dnslib.types.DigestType;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerator;
 
 
 public class DSResourceRecord extends AbstractResourceRecord {
@@ -81,6 +87,36 @@ public class DSResourceRecord extends AbstractResourceRecord {
 		return "DSResourceRecord [rdLength=" + (int) rdLength + ", keytag=" + (int)keytag
 				+ ", algorithm=" + algorithm + ", digestType=" + digestType
 				+ ", digest=" + Arrays.toString(digest) + "]";
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("keytag", (int)keytag).
+				add("algorithm", algorithm != null?algorithm.name() : "").
+				add("digest-type", digestType.name()).
+				add("digest", hex)).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeNumberField("flags", (int)keytag);
+			g.writeObjectField("algorithm", algorithm != null?algorithm.name() : "");
+			g.writeObjectField("digest-type", digestType.name());
+			g.writeObjectField("digest", hex);
+			
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public char getKeytag() {

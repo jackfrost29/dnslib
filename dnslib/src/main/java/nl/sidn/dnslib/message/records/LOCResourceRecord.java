@@ -1,12 +1,18 @@
 package nl.sidn.dnslib.message.records;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 import nl.sidn.dnslib.exception.DnsDecodeException;
 import nl.sidn.dnslib.message.util.NetworkData;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerator;
 
 /**
  * http://tools.ietf.org/html/rfc1876
@@ -14,8 +20,7 @@ import org.apache.log4j.Logger;
 
 public class LOCResourceRecord extends AbstractResourceRecord {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(LOCResourceRecord.class);
+	private static final Logger LOGGER = Logger.getLogger(LOCResourceRecord.class);
 
 	private static NumberFormat w2, w3;
 
@@ -226,6 +231,42 @@ public class LOCResourceRecord extends AbstractResourceRecord {
 
 		return sb.toString();
 
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("version", (int)version).
+				add("size", (int)size).
+				add("hor_pre", (int)horizontalPrecision).
+				add("vert_pre", (int)verticalPrecision).
+				add("lat", latitude).
+				add("long", longitude).
+				add("alt", altitude)).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			
+			g.writeNumberField("version", (int)version);
+			g.writeNumberField("size", (int)size);
+			g.writeNumberField("hor_pre", (int)horizontalPrecision);
+			g.writeNumberField("vert_pre", (int)verticalPrecision);
+			g.writeNumberField("lat", latitude);
+			g.writeNumberField("long", longitude);
+			g.writeNumberField("alt", altitude);
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String positionToString(long value, char pos, char neg) {

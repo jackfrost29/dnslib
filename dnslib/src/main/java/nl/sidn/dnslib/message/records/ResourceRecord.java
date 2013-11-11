@@ -1,36 +1,43 @@
 package nl.sidn.dnslib.message.records;
 
+import javax.json.JsonObject;
+
+import org.codehaus.jackson.JsonGenerator;
+
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.ResourceRecordClass;
 import nl.sidn.dnslib.types.ResourceRecordType;
 
 public interface ResourceRecord{
 
-	public String getName();
+	String getName();
 
-	public void setName(String name);
+	void setName(String name);
 
-	public ResourceRecordType getType();
+	ResourceRecordType getType();
 
-	public void setType(ResourceRecordType type);
+	void setType(ResourceRecordType type);
 
-	public ResourceRecordClass getClassz();
+	ResourceRecordClass getClassz();
 
-	public void setClassz(ResourceRecordClass classz);
+	void setClassz(ResourceRecordClass classz);
 
-	public long getTtl();
+	long getTtl();
 
-	public void setTtl(long ttl);
+	void setTtl(long ttl);
 	
-	public char getRdlength();
+	char getRdlength();
 	
-	public byte[] getRdata();
+	byte[] getRdata();
 	
 	void decode(NetworkData buffer);
 	
 	void encode(NetworkData buffer);
 
-	public String toZone(int maxLength);
+	String toZone(int maxLength);
 	
+	JsonObject toJSon();
+	
+	void toJSon(JsonGenerator g);
 
 }

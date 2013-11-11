@@ -1,8 +1,14 @@
 package nl.sidn.dnslib.message.records.dnssec;
 
+import java.io.IOException;
 import java.security.PublicKey;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import org.apache.commons.codec.binary.Base64;
+import org.codehaus.jackson.JsonGenerator;
 
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.NetworkData;
@@ -111,6 +117,40 @@ public class DNSKEYResourceRecord extends AbstractResourceRecord {
 	public String toZone(int maxLength) {
 		return super.toZone(maxLength) + " " + (int)flags + " " + protocol + " " + algorithm.getValue() +
 				"(\n\t\t\t\t\t\t" + new Base64(36, "\n\t\t\t\t\t\t".getBytes()).encodeAsString(keydata) + " )";
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("flags", (int)flags)).
+				add("protocol", protocol).
+				add("algorithm", algorithm.name()).
+				add("zone-key", isZoneKey).
+				add("sep-key", isSepKey).
+				add("keytag", keytag).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeNumberField("flags", (int)flags);
+			g.writeObjectField("protocol", protocol);
+			g.writeObjectField("algorithm", algorithm.name());
+			g.writeBooleanField("zone-key", isZoneKey);
+			g.writeBooleanField("sep-key", isSepKey);
+			g.writeNumberField("keytag", keytag);
+			
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public char getFlags() {

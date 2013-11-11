@@ -1,5 +1,13 @@
 package nl.sidn.dnslib.message.records;
 
+import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
+import org.codehaus.jackson.JsonGenerator;
+
 
 public class SPFResourceRecord extends TXTResourceRecord {
 
@@ -19,6 +27,28 @@ public class SPFResourceRecord extends TXTResourceRecord {
 	}
 	
 
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("spf-data", value)).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeObjectField("spf-data", value);
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 

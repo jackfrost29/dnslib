@@ -1,7 +1,17 @@
 package nl.sidn.dnslib.message.records;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonProcessingException;
 
 import nl.sidn.dnslib.message.util.NetworkData;
 
@@ -70,6 +80,30 @@ public class AAAAResourceRecord extends AbstractResourceRecord {
 	@Override
 	public String toZone(int maxLength) {
 		return super.toZone(maxLength) + "\t" + address;
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("address", address)).
+			build();
+	}
+
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeObjectField("address", address);
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 

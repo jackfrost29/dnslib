@@ -1,8 +1,15 @@
 package nl.sidn.dnslib.message.records;
 
+import java.io.IOException;
 import java.io.Serializable;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonProcessingException;
 
 import nl.sidn.dnslib.message.util.DNSStringUtil;
 import nl.sidn.dnslib.message.util.NetworkData;
@@ -108,6 +115,37 @@ public abstract class AbstractResourceRecord implements ResourceRecord, Serializ
 		int paddedSize = ( maxLength - name.length() ) + name.length();
 		String ownerWithPadding = StringUtils.rightPad(name, paddedSize, " ");
 		return ownerWithPadding + "\t" + ttl + "\t" + classz + "\t" + type;
+	}
+	
+	public JsonObjectBuilder createJsonBuilder(){
+		return Json.createObjectBuilder().
+			add("name", name).
+			add("type", type.name()).
+			add("class", classz.name()).	
+			add("ttl", ttl).
+			add("rdLength", (int)rdLength);
+	}
+	
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("dummy", "toddo")).
+			build();
+	}
+	
+	public void toJSon(JsonGenerator g){
+		
+		try {
+			g.writeStartObject();
+			g.writeObjectField("name", name);
+			g.writeObjectField("type", type.name());
+			g.writeObjectField("class", classz.name());	
+			g.writeObjectField("ttl", ttl);
+			g.writeObjectField("rdLength", (int)rdLength);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

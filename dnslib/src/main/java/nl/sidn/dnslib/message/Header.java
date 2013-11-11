@@ -1,5 +1,14 @@
 package nl.sidn.dnslib.message;
 
+import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonProcessingException;
+
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.MessageType;
 import nl.sidn.dnslib.types.OpcodeType;
@@ -486,6 +495,57 @@ public class Header {
 				+ ", ad:" + ad + ", cd:" + cd + ", rcode:" + rcode
 				+ ", qdCount:" + (int)qdCount + ", anCount:" + (int)anCount
 				+ ", nsCount:" + (int)nsCount + ", arCount:" + (int)arCount;
+	}
+	
+	public JsonObject toJSon(){
+		return Json.createObjectBuilder().
+			add("id", id).
+			add("qr", qr.getValue()).
+			add("opcode", OpCode.getValue()).	
+			add("flags", Json.createObjectBuilder().
+				add("aa", aa).
+				add("tc", tc).
+				add("rd", rd).
+				add("ra", ra).
+				add("ad", ad).
+				add("cd", cd)).
+			add("rcode", rcode.name()).
+			add("qdCount", qdCount).
+			add("anCount", anCount).
+			add("nsCount", nsCount).
+			add("arCount", arCount).
+			build();
+	}
+
+	public void toJSon(JsonGenerator g) {
+		try {
+			g.writeNumberField("id", (int)id);
+			g.writeNumberField("qr", qr.getValue());
+			g.writeNumberField("opcode", (int)OpCode.getValue());
+			g.writeObjectFieldStart("flags");
+			g.writeBooleanField("aa", aa);
+			g.writeBooleanField("tc", tc);
+			g.writeBooleanField("rd", rd);
+			g.writeBooleanField("ra", ra);
+			g.writeBooleanField("ad", ad);
+			g.writeBooleanField("cd", cd);
+			g.writeEndObject();
+			g.writeNumberField("rcode", (int)rcode.getValue());
+			g.writeNumberField("qdCount", qdCount);
+			g.writeNumberField("anCount", anCount);
+			g.writeNumberField("nsCount", nsCount);
+			g.writeNumberField("arCount", arCount);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 

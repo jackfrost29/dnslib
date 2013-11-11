@@ -1,7 +1,16 @@
 package nl.sidn.dnslib.message;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+import javax.json.JsonWriter;
 
 import nl.sidn.dnslib.message.records.ResourceRecord;
 import nl.sidn.dnslib.message.records.ResourceRecordFactory;
@@ -10,6 +19,8 @@ import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.ResourceRecordType;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonGenerator;
 
 
 public class Message {
@@ -24,6 +35,10 @@ public class Message {
 	private List<RRset> additional = new ArrayList<>();
 	
 	public Message(){};
+	
+	public Message(NetworkData data){
+		decode(data);
+	};
 	
 	public Header getHeader() {
 		return header;
@@ -285,6 +300,38 @@ public class Message {
 		return builder.toString();
 	}
 	
+	public JsonObject toJson() {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("header", header.toJSon());
+
+		JsonArrayBuilder questionsBuilder = Json.createArrayBuilder();
+		for (Question question : questions) {
+			questionsBuilder.add(question.toJSon());
+		}
+		
+		builder.add("question", questionsBuilder.build());
+		
+		JsonArrayBuilder rrBuilder = Json.createArrayBuilder();
+		for (RRset rrset : answer) {
+			rrBuilder.add(rrset.toJSon());
+		}
+		builder.add("answer", rrBuilder.build());
+		
+		rrBuilder = Json.createArrayBuilder();
+		for (RRset rrset : authority) {
+			rrBuilder.add(rrset.toJSon());
+		}
+		builder.add("authority", rrBuilder.build());
+		
+		rrBuilder = Json.createArrayBuilder();
+		for (RRset rrset : additional) {
+			rrBuilder.add(rrset.toJSon());
+		}
+		builder.add("additional", rrBuilder.build());
+		
+		return builder.build();
+	}
+	
 	public int maxLength() {
 		int length = 0;
 		
@@ -307,6 +354,59 @@ public class Message {
 		}
 
 		return length;
+	}
+
+	public void toJson(JsonGenerator g) {
+		try {
+			g.writeObjectFieldStart("dns");
+
+			g.writeObjectFieldStart("header");
+			header.toJSon(g);
+			
+			g.writeEndObject();
+			if(questions.size() > 0){
+				g.writeArrayFieldStart("question");
+				for (Question question : questions) {
+					question.toJSon(g);
+				}
+				g.writeEndArray();
+			}
+			if(answer.size() > 0){
+				g.writeArrayFieldStart("answer");
+				
+				for (RRset rrset : answer) {
+					rrset.toJSon(g);
+				}
+				
+				g.writeEndArray();
+			}
+			if(authority.size() > 0){
+				g.writeArrayFieldStart("authority");
+				
+				for (RRset rrset : authority) {
+					rrset.toJSon(g);
+				}
+				
+				g.writeEndArray();
+			}
+			if(additional.size() > 0){
+				g.writeArrayFieldStart("additional");
+	
+				for (RRset rrset : additional) {
+					rrset.toJSon(g);
+				}
+				g.writeEndArray();
+			}
+			
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		
 	}
 
 	

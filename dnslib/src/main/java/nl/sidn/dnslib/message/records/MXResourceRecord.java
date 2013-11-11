@@ -1,5 +1,13 @@
 package nl.sidn.dnslib.message.records;
 
+import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
+import org.codehaus.jackson.JsonGenerator;
+
 import nl.sidn.dnslib.message.util.DNSStringUtil;
 import nl.sidn.dnslib.message.util.NetworkData;
 
@@ -50,6 +58,30 @@ public class MXResourceRecord extends AbstractResourceRecord {
 		return super.toZone(maxLength) + "\t" + (int)preference + " " + exchange;
 	}
 	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("preference", (int)preference).
+				add("exchange", exchange)).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeNumberField("preference", preference);
+			g.writeObjectField("exchange", exchange);
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 
 }

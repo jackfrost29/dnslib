@@ -1,5 +1,13 @@
 package nl.sidn.dnslib.message;
 
+import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonProcessingException;
+
 import nl.sidn.dnslib.message.util.DNSStringUtil;
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.ResourceRecordClass;
@@ -54,6 +62,29 @@ public class Question {
 	public String toString() {
 		return "Question [qName=" + qName + ", qType=" + qType + ", qClass="
 				+ qClass + "]";
+	}
+	
+	public JsonObject toJSon(){
+		return Json.createObjectBuilder().
+			add("qName", qName).
+			add("qType", qType != null?qType.name(): "").
+			add("qClass", qClass != null?qClass.name(): "").
+			build();
+	}
+
+	public void toJSon(JsonGenerator g) {
+		
+		try {
+			g.writeStartObject();
+			g.writeObjectField("qName", qName);
+			g.writeObjectField("qType", qType != null?qType.name(): "");
+			g.writeObjectField("qClass", qClass != null?qClass.name(): "");
+			g.writeEndObject();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 

@@ -1,10 +1,17 @@
 package nl.sidn.dnslib.message.records;
 
+import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import nl.sidn.dnslib.message.util.NetworkData;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerator;
 
 public class NotImplementedResourceRecord extends AbstractResourceRecord {
 	
@@ -18,6 +25,8 @@ public class NotImplementedResourceRecord extends AbstractResourceRecord {
 		LOGGER.debug("decode unknown RR with name: " + getName());
 		
 		LOGGER.debug(" Unknown RR has size: " + (int)rdLength);
+		
+		LOGGER.debug(toZone(100));
 		
 		if(rdLength > 0 ){
 			buffer.setReaderIndex(buffer.getReaderIndex()+rdLength);
@@ -65,6 +74,63 @@ public class NotImplementedResourceRecord extends AbstractResourceRecord {
 		
 		return b.toString();
 		
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		String actualClass = null; 
+		String actualType = null;
+		if(classz == null){
+			actualClass = "CLASS" + (int)rawClassz;
+		}else{
+			actualClass = classz.name();
+		}
+		
+		if(type == null){
+			actualType = "TYPE" + (int)rawType;
+		}else{
+			actualType = ""+type;
+		}
+		
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("class", actualClass).
+				add("type", actualType).
+				add("rdlength", (int)rdLength).
+				add("rdata", Hex.encodeHexString(rdata))).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+		
+		String actualClass = null; 
+		String actualType = null;
+		if(classz == null){
+			actualClass = "CLASS" + (int)rawClassz;
+		}else{
+			actualClass = classz.name();
+		}
+		
+		if(type == null){
+			actualType = "TYPE" + (int)rawType;
+		}else{
+			actualType = ""+type;
+		}
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeObjectField("class", actualClass);
+			g.writeObjectField("type", actualType);
+			g.writeNumberField("rdLength", rdLength);
+			g.writeObjectField("rdata",  Hex.encodeHexString(rdata));
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,14 +1,22 @@
 package nl.sidn.dnslib.message.records.dnssec;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.DNSStringUtil;
 import nl.sidn.dnslib.message.util.NetworkData;
 import nl.sidn.dnslib.types.TypeMap;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerator;
 
 public class NSECResourceRecord extends AbstractResourceRecord {
 	
@@ -74,7 +82,43 @@ public class NSECResourceRecord extends AbstractResourceRecord {
 		}
 		
 		return b.toString();
-				
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		builder.
+			add("rdata", Json.createObjectBuilder().
+				add("next-domainname", nextDomainName));
+		
+		JsonArrayBuilder typeBuilder = Json.createArrayBuilder();
+		for (TypeMap type : types) {
+			typeBuilder.add(type.getType().name());
+		}
+		return builder.add("types", typeBuilder.build()).
+			   build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeObjectField("next-domainname", nextDomainName);
+			
+			
+			g.writeArrayFieldStart("types");
+			for (TypeMap type : types) {
+				g.writeString(type.getType().name());
+			}
+			g.writeEndArray();
+			
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 

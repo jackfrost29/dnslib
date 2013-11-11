@@ -1,8 +1,13 @@
 package nl.sidn.dnslib.message.records.dnssec;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 import nl.sidn.dnslib.message.records.AbstractResourceRecord;
 import nl.sidn.dnslib.message.util.DNSStringUtil;
@@ -15,12 +20,14 @@ import nl.sidn.dnslib.util.LabelUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerator;
 
 public class RRSIGResourceRecord extends AbstractResourceRecord {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private static final Logger LOGGER = Logger.getLogger(RRSIGResourceRecord.class);
+	private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("YYYYMMddHHmmss");
 	
 	
 	/*
@@ -109,7 +116,8 @@ public class RRSIGResourceRecord extends AbstractResourceRecord {
 		signature = new byte[signatureLength];
 			
 		buffer.readBytes(signature);
-				
+		
+		DATE_FMT.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 	
 	
@@ -241,6 +249,65 @@ public class RRSIGResourceRecord extends AbstractResourceRecord {
 				" " + originalTtl + " " + fmt.format(exp) +
 				"(\n\t\t\t\t\t" + fmt.format(incep) + " " + (int)keytag + " " + signerName +
 				 "\n\t\t\t\t\t" + new Base64(36, "\n\t\t\t\t\t".getBytes()).encodeAsString(signature) + " )" ;
+	}
+	
+	
+	@Override
+	public JsonObject toJSon(){
+		//SimpleDateFormat fmt = new SimpleDateFormat("YYYYMMddHHmmss");
+//		DATE_FMT.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		Date exp = new Date();
+		exp.setTime((long)(signatureExpiration * 1000));
+		
+		Date incep = new Date();
+		incep.setTime((long)(signatureInception * 1000));
+		
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("type-covered", typeCovered.name()).
+				add("algorithm", algorithm.name()).
+				add("labels", labels).
+				add("original-ttl", originalTtl).
+				add("sig-exp", DATE_FMT.format(exp)).
+				add("sig-inc", DATE_FMT.format(incep)).
+				add("keytag", (int)keytag).
+				add("signer-name", signerName).
+				add("signature", new Base64(Integer.MAX_VALUE, "".getBytes()).encodeAsString(signature))).
+			build();
+	}
+	
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+		
+		Date exp = new Date();
+		exp.setTime((long)(signatureExpiration * 1000));
+		
+		Date incep = new Date();
+		incep.setTime((long)(signatureInception * 1000));
+		
+
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			
+			g.writeObjectField("type-covered", typeCovered.name());
+			g.writeObjectField("algorithm", algorithm.name());
+			g.writeNumberField("labels", labels);
+			g.writeNumberField("original-ttl", originalTtl);
+			g.writeObjectField("sig-exp", DATE_FMT.format(exp));
+			g.writeObjectField("sig-inc", DATE_FMT.format(incep));
+			g.writeNumberField("keytag", (int)keytag);
+			g.writeObjectField("signer-name", signerName);
+			g.writeObjectField("signature", new Base64(Integer.MAX_VALUE, "".getBytes()).encodeAsString(signature));
+			
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean getWildcard() {

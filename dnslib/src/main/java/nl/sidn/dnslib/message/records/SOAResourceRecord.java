@@ -1,5 +1,13 @@
 package nl.sidn.dnslib.message.records;
 
+import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
+import org.codehaus.jackson.JsonGenerator;
+
 import nl.sidn.dnslib.message.util.DNSStringUtil;
 import nl.sidn.dnslib.message.util.NetworkData;
 
@@ -78,6 +86,40 @@ public class SOAResourceRecord extends AbstractResourceRecord {
 	public String toZone(int maxLength) {
 		return super.toZone(maxLength) + "\t" + mName + " " + rName + " " + serial + " " + refresh + " "
 				+ retry + " " + expire + " " + minimum;
+	}
+	
+	@Override
+	public JsonObject toJSon(){
+		JsonObjectBuilder builder = super.createJsonBuilder();
+		return builder.
+			add("rdata", Json.createObjectBuilder().
+				add("mname", mName).
+				add("rname", rName).
+				add("serial", serial).
+				add("refresh", refresh).
+				add("retry", retry).
+				add("expire", expire).
+				add("minimum", minimum)).
+			build();
+	}
+	
+	@Override
+	public void toJSon(JsonGenerator g) {
+		try {
+			super.toJSon(g);
+			g.writeObjectFieldStart("rdata");
+			g.writeObjectField("mname", mName);
+			g.writeObjectField("rname", rName);
+			g.writeObjectField("serial", serial);
+			g.writeObjectField("refresh", refresh);
+			g.writeObjectField("retry", retry);
+			g.writeObjectField("expire", expire);
+			g.writeObjectField("minimum", minimum);
+			g.writeEndObject();
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public String getmName() {
